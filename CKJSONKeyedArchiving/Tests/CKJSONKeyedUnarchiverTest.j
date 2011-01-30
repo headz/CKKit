@@ -22,6 +22,8 @@
  
 @import "../CKJSONKeyedUnarchiver.j"
 
+objj_msgSend_decorate(objj_backtrace_decorator);
+
 @implementation CKJSONKeyedUnarchiverTest : OJTestCase
 
 - (void)testThatCKJSONKeyedUnarchiverDoesInitialize
@@ -39,17 +41,45 @@
 
 - (void)testThatCKJSONKeyedUnarchiverDoesUnarchiveMockObject
 {
-    var data = {"$$CLASS$$":"MockJSONParseObject","StringKey":"Bob","NumberKey":42,"BoolKey":true,"NullKey":null,"ArrayKey":["Bob",42,true,null],"DictionaryKey":{"$$CLASS$$":"CPDictionary","CP.objects":{"array":["Bob",42,true,null],"null":null,"bool":true,"number":42,"string":"Bob"}},"DateKey":{"$$CLASS$$":"CPDate","CPDateTimeKey":1263762168983}};
+    var data = 
+			{
+				"$$CLASS$$":"MockJSONParseObject",
+				"StringKey":"Bob",
+				"NumberKey":42,
+				"BoolKey":true,
+				"NullKey":null,
+				"ArrayKey":["Bob",42,true,null],
+				"DictionaryKey":
+				{
+					"$$CLASS$$":"CPDictionary",
+					"CP.objects":
+					{
+						"array":["Bob",42,true,null],
+						"bool":true,
+						"null": null,
+						"number":42,
+						"string":"Bob",
+					 }
+				},
+				"DateKey":
+				{
+					"$$CLASS$$":"CPDate",
+					"CPDateTimeKey":1263762168983
+				}
+			};
 
     var response = [CKJSONKeyedUnarchiver unarchiveObjectWithData:data];
 
     [self assert:@"MockJSONParseObject" equals:CPStringFromClass([response class])];
     [self assert:data["StringKey"] equals:[response aString]];
     [self assert:data["NumberKey"] equals:[response aNumber]];
+
     [self assert:data["BoolKey"] equals:[response aBool]];
+
     [self assert:data["NullKey"] equals:[response aNull]];
     [self assert:data["ArrayKey"] equals:[response anArray]];
     [self assert:new Date(data["DateKey"]["CPDateTimeKey"]) equals:[response aDate]];
+	
     [self assertTrue:[[CPDictionary dictionaryWithJSObject:data["DictionaryKey"]["CP.objects"]] isEqualToDictionary:[response aDictionary]]];
 }
 
@@ -66,6 +96,8 @@
     [self assert:data["NullKey"] equals:[response aNull]];
     [self assert:data["ArrayKey"] equals:[response anArray]];
     [self assert:new Date(data["DateKey"]["CPDateTimeKey"]) equals:[response aDate]];
+	
+	
     [self assertTrue:[[CPDictionary dictionaryWithJSObject:data["DictionaryKey"]["CP.objects"]] isEqualToDictionary:[response aDictionary]]];
     [self assert:data["ChildKey"]["$$CLASS$$"] equals:CPStringFromClass([[response child] class])];
 }

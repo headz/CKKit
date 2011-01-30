@@ -22,6 +22,8 @@
  
 @import "../CKJSONKeyedArchiver.j"
 
+#pragma mark -
+#pragma mark CKJSONKeyedArchiverTest
 @implementation CKJSONKeyedArchiverTest : OJTestCase
 
 - (void)testThatCKJSONKeyedArchiverDoesInitialize
@@ -41,7 +43,7 @@
 {
     var data = [[MockJSONParseObject alloc] init];
     var response = [CKJSONKeyedArchiver archivedDataWithRootObject:data];
-    
+	   
     [self assert:[data aString] equals:response["StringKey"]];
     [self assert:[data aNumber] equals:response["NumberKey"]];
     [self assert:[data aBool] equals:response["BoolKey"]];
@@ -75,7 +77,8 @@
 
 @end
 
-
+#pragma mark -
+#pragma mark MockJSONParseObject
 @implementation MockJSONParseObject : CPObject
 {
     CPString        aString     @accessors;
@@ -131,6 +134,8 @@
 
 @end
 
+#pragma mark -
+#pragma mark MockJsonParseObjectWithChild
 @implementation MockJsonParseObjectWithChild : MockJSONParseObject
 {
     MockJSONParseObject child   @accessors;

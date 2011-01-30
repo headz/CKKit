@@ -55,8 +55,13 @@ var CKJSONKeyedUnarchiverClassKey = @"$$CLASS$$";
     return [self _decodeObject:_json[aKey]];
 }
 
+
+
+
+
 - (id)_decodeObject:(JSON)encodedJSON
 {
+	//CPLog(@"encodedJSON :  %@",[CPString JSONFromObject:encodedJSON]);
     var decodedObject = nil;
     
     if ([self _isJSONAPrimitive:encodedJSON]) // Primitives
@@ -84,6 +89,11 @@ var CKJSONKeyedUnarchiverClassKey = @"$$CLASS$$";
     return decodedObject;
 }
 
+
+
+
+
+
 - (id)_decodeDictionaryOfObjectsForKey:(CPString)aKey
 {
     var decodedDictionary = [CPDictionary dictionary];
@@ -93,9 +103,16 @@ var CKJSONKeyedUnarchiverClassKey = @"$$CLASS$$";
     {
         if (key !== CKJSONKeyedUnarchiverClassKey)
         {
-            [decodedDictionary setObject:[self _decodeObject:encodedObject[key]] forKey:key];
+			var decodedObject = [self _decodeObject:encodedJSON[key]];
+			if (decodedObject === null)
+				decodedObject = [CPNull null];
+				
+            [decodedDictionary setObject:decodedObject forKey:key];
+			
         }
     }
+	
+	
 
     return decodedDictionary;
 }
